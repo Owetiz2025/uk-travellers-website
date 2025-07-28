@@ -3,7 +3,7 @@
   const town = params.get("town") || "bromyard";
   const sort = params.get("sort") || "overview";
 
-  const response = await fetch(`uk-travellers-website/data/${town}.json`);
+  const response = await fetch(`data/${town}.json`);
   const data = await response.json();
 
   document.title = data.name + " - UK Town Guide";
