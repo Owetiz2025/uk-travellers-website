@@ -1,37 +1,40 @@
-const searchBox = document.getElementById("searchBox");
-const suggestions = document.getElementById("suggestions");
+// search.js
 
-async function fetchTownList() {
+let towns = [];
+
+async function loadTowns() {
   try {
-    const response = await fetch("search/data/towns.json");
-    if (!response.ok) throw new Error("Could not load towns");
-    return await response.json();
-  } catch (err) {
-    console.error("Error loading towns:", err);
-    return [];
+    const response = await fetch("search/data/towns.json"); // or the correct path to your JSON file
+    if (!response.ok) throw new Error("Failed to fetch towns");
+    towns = await response.json();
+  } catch (error) {
+    console.error("Error loading towns:", error);
   }
 }
 
-function createSuggestionItem(town) {
-  const li = document.createElement("li");
-  li.textContent = town.charAt(0).toUpperCase() + town.slice(1);
-  li.onclick = () => {
-    window.location.href = `/search/?town=${encodeURIComponent(town)}`;
-  };
-  return li;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("search");
+  const suggestions = document.getElementById("suggestions");
 
-async function initSearch() {
-  const towns = await fetchTownList();
+  loadTowns().then(() => {
+    input.addEventListener("input", () => {
+      const searchTerm = input.value.toLowerCase();
+      suggestions.innerHTML = "";
 
-  searchBox.addEventListener("input", () => {
-    const query = searchBox.value.toLowerCase();
-    suggestions.innerHTML = "";
-    if (query.length === 0) return;
+      const filtered = towns.filter(town =>
+        town.name.toLowerCase().includes(searchTerm)
+      );
 
-    const filtered = towns.filter(town => town.toLowerCase().includes(query));
-    filtered.forEach(town => suggestions.appendChild(createSuggestionItem(town)));
+      filtered.forEach(town => {
+        const item = document.createElement("div");
+        item.textContent = town.name;
+        item.classList.add("suggestion-item");
+        item.addEventListener("click", () => {
+          input.value = town.name;
+          window.location.href = `search/?town=${encodeURIComponent(town.slug)}`;
+        });
+        suggestions.appendChild(item);
+      });
+    });
   });
-}
-
-initSearch();
+});
