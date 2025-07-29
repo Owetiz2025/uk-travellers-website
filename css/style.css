@@ -23,7 +23,7 @@ body {
   margin-bottom: 1em;
 }
 
-#searchBox {
+#search {
   width: 100%;
   padding: 12px;
   border: 2px solid #ddd;
@@ -32,7 +32,7 @@ body {
   transition: border-color 0.3s;
 }
 
-#searchBox:focus {
+#search:focus {
   border-color: #00aaff;
   outline: none;
 }
