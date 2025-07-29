@@ -1,40 +1,48 @@
-// search.js
-
-let towns = [];
-
-async function loadTowns() {
-  try {
-    const response = await fetch("search/data/towns.json"); // or the correct path to your JSON file
-    if (!response.ok) throw new Error("Failed to fetch towns");
-    towns = await response.json();
-  } catch (error) {
-    console.error("Error loading towns:", error);
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("search");
   const suggestions = document.getElementById("suggestions");
 
-  loadTowns().then(() => {
-    input.addEventListener("input", () => {
-      const searchTerm = input.value.toLowerCase();
-      suggestions.innerHTML = "";
+  if (!input || !suggestions) {
+    console.error("Missing #search or #suggestions in HTML");
+    return;
+  }
 
-      const filtered = towns.filter(town =>
-        town.name.toLowerCase().includes(searchTerm)
-      );
+  const towns = [
+    {
+      "name": "Bromyard",
+      "slug": "bromyard"
+    },
+    {
+      "name": "Hereford",
+      "slug": "hereford"
+    },
+    {
+      "name": "Worcester",
+      "slug": "worcester"
+    }
+  ];
 
-      filtered.forEach(town => {
-        const item = document.createElement("div");
-        item.textContent = town.name;
-        item.classList.add("suggestion-item");
-        item.addEventListener("click", () => {
-          input.value = town.name;
-          window.location.href = `search/?town=${encodeURIComponent(town.slug)}`;
-        });
-        suggestions.appendChild(item);
+  input.addEventListener("input", () => {
+    const query = input.value.toLowerCase();
+    suggestions.innerHTML = "";
+
+    if (query.length === 0) return;
+
+    const matches = towns.filter(town => town.name.toLowerCase().includes(query));
+
+    matches.forEach(town => {
+      const item = document.createElement("div");
+      item.classList.add("suggestion-item");
+
+      const li = document.createElement("li");
+      li.textContent = town.name;
+
+      item.appendChild(li);
+      item.addEventListener("click", () => {
+        window.location.href = `?town=${town.slug}`;
       });
+
+      suggestions.appendChild(item);
     });
   });
 });
