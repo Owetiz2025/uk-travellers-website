@@ -1,3 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UK Town Guide</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1 id="town-name">Loading...</h1>
+    <nav class="sort-tabs">
+      <a id="tab-overview">Overview</a>
+      <a id="tab-map">Map</a>
+      <a id="tab-routes">Routes</a>
+      <a id="tab-hotels">Hotels</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="overview" class="section">
+      <h2>Overview</h2>
+      <p id="description">Loading description...</p>
+    </section>
+
+    <section id="map-section" class="section">
+      <h2>Interactive Map</h2>
+      <div id="map"></div>
+    </section>
+
+    <section id="routes" class="section">
+      <h2>Walking & Cycling Routes</h2>
+      <ul id="routes-list"></ul>
+    </section>
+    
+    <section id="hotels" class="section">
+      <h2>Where to Stay</h2>
+      <ul id="hotels-list"></ul>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="js/town-loader.js"></script>
+</body>
 </html>
