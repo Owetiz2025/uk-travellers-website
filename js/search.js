@@ -1,70 +1,37 @@
-// js/search.js
+const searchBox = document.getElementById("searchBox");
+const suggestions = document.getElementById("suggestions");
 
-// Simulated list of towns — eventually load from JSON or API
-let towns = [];
+async function fetchTownList() {
+  try {
+    const response = await fetch("search/data/towns.json");
+    if (!response.ok) throw new Error("Could not load towns");
+    return await response.json();
+  } catch (err) {
+    console.error("Error loading towns:", err);
+    return [];
+  }
+}
 
-fetch('data/towns.json')
-  .then(res => res.json())
-  .then(data => {
-    towns = data;
+function createSuggestionItem(town) {
+  const li = document.createElement("li");
+  li.textContent = town.charAt(0).toUpperCase() + town.slice(1);
+  li.onclick = () => {
+    window.location.href = `/search/?town=${encodeURIComponent(town)}`;
+  };
+  return li;
+}
+
+async function initSearch() {
+  const towns = await fetchTownList();
+
+  searchBox.addEventListener("input", () => {
+    const query = searchBox.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if (query.length === 0) return;
+
+    const filtered = towns.filter(town => town.toLowerCase().includes(query));
+    filtered.forEach(town => suggestions.appendChild(createSuggestionItem(town)));
   });
+}
 
-const input = document.getElementById("searchBox");
-const suggestionsBox = document.getElementById("suggestions");
-
-input.addEventListener("input", () => {
-  const query = input.value.toLowerCase();
-  suggestionsBox.innerHTML = "";
-
-  if (query === "") {
-    suggestionsBox.style.display = "none";
-    return;
-  }
-
-  const matches = towns.filter(town => town.name.toLowerCase().startsWith(query));
-
-  if (matches.length > 0) {
-    matches.forEach(town => {
-      const div = document.createElement("div");
-      div.classList.add("suggestion");
-      div.textContent = town.name;
-      div.addEventListener("click", () => {
-        window.location.href = `towns.html?town=${encodeURIComponent(town.slug)}&sort=overview`;
-      });
-      suggestionsBox.appendChild(div);
-    });
-    suggestionsBox.style.display = "block";
-  } else {
-    suggestionsBox.style.display = "none";
-  }
-});
-
-const input = document.getElementById("searchBox");
-const suggestionsBox = document.getElementById("suggestions");
-
-input.addEventListener("input", () => {
-  const query = input.value.toLowerCase();
-  suggestionsBox.innerHTML = "";
-  
-  if (query === "") {
-    suggestionsBox.style.display = "none";
-    return;
-  }
-
-  const matches = towns.filter(town => town.toLowerCase().startsWith(query));
-
-  if (matches.length > 0) {
-    matches.forEach(town => {
-      const div = document.createElement("div");
-      div.classList.add("suggestion");
-      div.textContent = town;
-      div.addEventListener("click", () => {
-        window.location.href = `towns.html?town=${encodeURIComponent(town.toLowerCase())}&sort=overview`;
-      });
-      suggestionsBox.appendChild(div);
-    });
-    suggestionsBox.style.display = "block";
-  } else {
-    suggestionsBox.style.display = "none";
-  }
-});
+initSearch();
