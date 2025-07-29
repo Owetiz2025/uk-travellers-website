@@ -1,0 +1,17 @@
+{
+  "name": "Bromyard",
+  "description": "A charming market town in Herefordshire known for its festivals and scenic countryside.",
+  "coordinates": [52.1906, -2.5087],
+  "walking_routes": [
+    {
+      "name": "Bromyard Downs Trail",
+      "description": "A circular walk across open hills and woodlands."
+    }
+  ],
+  "hotels": [
+    {
+      "name": "Falcon Hotel",
+      "description": "Traditional hotel in the heart of town."
+    }
+  ]
+}
