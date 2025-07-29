@@ -4,7 +4,7 @@ let towns = [];
 
 async function loadTowns() {
   try {
-    const response = await fetch("/search/data/towns.json"); // or the correct path to your JSON file
+    const response = await fetch("search/data/towns.json"); // or the correct path to your JSON file
     if (!response.ok) throw new Error("Failed to fetch towns");
     towns = await response.json();
   } catch (error) {
